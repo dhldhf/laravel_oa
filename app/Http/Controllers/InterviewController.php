@@ -14,7 +14,8 @@ class InterviewController extends Controller
      */
     public function index()
     {
-
+        $interviews = Interview::paginate(3);
+        return view('interviews.index',compact('interviews'));
     }
 
     /**
@@ -24,7 +25,7 @@ class InterviewController extends Controller
      */
     public function create()
     {
-
+        return view('interviews.create');
     }
 
     /**
@@ -35,7 +36,51 @@ class InterviewController extends Controller
      */
     public function store(Request $request)
     {
+//        var_dump($request->note);die;
+        $this->validate($request,
+            [
+                'name'=>'required',
+                'date'=>'required',
+                'booking_date'=>'required',
+                'send_date'=>'required',
+                'medium'=>'required',
+                'gender'=>'required',
+                'eta'=>'required',
+                'census'=>'required',
+                'experience'=>'required',
+                'position'=>'required',
+            ],
+            [
+                'name.required'=>'姓名不能为空',
+                'date.required'=>'日期不能为空',
+                'gender.required'=>'性别必填',
+                'medium.required'=>'中介不能为空',
+                'send_date.required'=>'寄签日期不能为空',
+                'booking_date.required'=>'订票日期不能为空',
+                'eta.required'=>'预计到达时间不能为空',
+                'census.required'=>'户籍不能为空',
+                'experience.required'=>'经验不能为空',
+                'position.required'=>'求职职位必填',
+            ]);
+//        var_dump($request->name);die;
+        Interview::create(
+            [
+                'name'=>$request->name,
+                'date'=>$request->date,
+                'eta'=>$request->eta,
+                'booking_date'=>$request->booking_date,
+                'send_date'=>$request->send_date,
+                'gender'=>$request->gender,
+                'medium'=>$request->medium,
+                'note'=>$request->note,
+                'census'=>$request->census,
+                'experience'=>$request->experience,
+                'position'=>$request->position,
+            ]
+        );
 
+        session()->flash('success','添加成功');
+        return redirect()->route('interviews.index');
     }
 
     /**
@@ -57,7 +102,7 @@ class InterviewController extends Controller
      */
     public function edit(Interview $interview)
     {
-        //
+        return view('interviews.edit',compact('interview'));
     }
 
     /**
@@ -69,7 +114,50 @@ class InterviewController extends Controller
      */
     public function update(Request $request, Interview $interview)
     {
-        //
+        $this->validate($request,
+            [
+                'name'=>'required',
+                'date'=>'required',
+                'booking_date'=>'required',
+                'send_date'=>'required',
+                'medium'=>'required',
+                'gender'=>'required',
+                'eta'=>'required',
+                'census'=>'required',
+                'experience'=>'required',
+                'position'=>'required',
+            ],
+            [
+                'name.required'=>'姓名不能为空',
+                'date.required'=>'日期不能为空',
+                'gender.required'=>'性别必填',
+                'medium.required'=>'中介不能为空',
+                'send_date.required'=>'寄签日期不能为空',
+                'booking_date.required'=>'订票日期不能为空',
+                'eta.required'=>'预计到达时间不能为空',
+                'census.required'=>'户籍不能为空',
+                'experience.required'=>'经验不能为空',
+                'position.required'=>'求职职位必填',
+            ]);
+//        var_dump($request->date);die;
+        $interview->update(
+            [
+                'name'=>$request->name,
+                'date'=>$request->date,
+                'eta'=>$request->eta,
+                'booking_date'=>$request->booking_date,
+                'send_date'=>$request->send_date,
+                'gender'=>$request->gender,
+                'medium'=>$request->medium,
+                'note'=>$request->note,
+                'census'=>$request->census,
+                'experience'=>$request->experience,
+                'position'=>$request->position,
+            ]
+        );
+
+        session()->flash('success','修改成功');
+        return redirect()->route('interviews.index');
     }
 
     /**
@@ -80,6 +168,6 @@ class InterviewController extends Controller
      */
     public function destroy(Interview $interview)
     {
-        //
+        $interview->delete();
     }
 }

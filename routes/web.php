@@ -14,3 +14,7 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::resource('interviews', 'InterviewController');
+
+Route::resource('gangs', 'GangController');
