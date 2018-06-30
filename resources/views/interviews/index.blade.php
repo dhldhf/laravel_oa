@@ -19,10 +19,10 @@
     <script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js" ></script>
     <script>DD_belatedPNG.fix('*');</script>
     <![endif]-->
-    <title>用户管理</title>
+    <title>面试登记管理</title>
 </head>
 <body>
-<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 用户中心 <span class="c-gray en">&gt;</span> 用户管理 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 面试登记中心 <span class="c-gray en">&gt;</span> 面试登记管理 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
 <div class="page-container">
     <div class="text-c"> 日期范围：
         <input type="text" onfocus="WdatePicker({ maxDate:'#F{$dp.$D(\'datemax\')||\'%y-%M-%d\'}' })" id="datemin" class="input-text Wdate" style="width:120px;">
@@ -31,7 +31,7 @@
         <input type="text" class="input-text" style="width:250px" placeholder="输入行姓名、电话" id="" name="">
         <button type="submit" class="btn btn-success radius" id="" name=""><i class="Hui-iconfont">&#xe665;</i> 搜登记信息</button>
     </div>
-    <div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l"><a href="javascript:;" onclick="gang_add('新增登记信息','{{ route('interviews.create') }}','1000','800')" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe600;</i> 新增登记信息</a></span> <span class="r">共有数据：<strong>88</strong> 条</span> </div>
+    <div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l"><a href="javascript:;" onclick="interview_add('新增登记信息','{{ route('interviews.create') }}','1000','800')" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe600;</i> 新增登记信息</a></span> <span class="r">共有数据：<strong>88</strong> 条</span> </div>
     <div class="mt-20">
         <table class="table table-border table-bordered table-hover table-bg table-sort" id="interviews">
             <thead>
@@ -66,10 +66,7 @@
                     <td>{{ $interview->booking_date }}</td>
                     <td>{{ $interview->eta }}</td>
                     <td>{!! $interview->note !!}</td>
-                    <td>
-                        <a href="javascript:;" onclick="gang_show('修改登记信息','{{ route('interviews.edit',['$interview'=>$interview]) }}','1000','800')" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe6df;</i> </a>
-                        <button class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i></button>
-                    </td>
+                    <td class="td-manage"><a title="编辑" href="javascript:;" onclick="interview_edit('修改登记信息','{{ route('interviews.edit',['$interview'=>$interview]) }}','1000','800')" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6df;</i></a> <a title="删除" href="javascript:;" onclick="interview_del(this,'{{ $interview->id }}')" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a></td>
                 </tr>
             @endforeach
             </tbody>
@@ -99,7 +96,7 @@
 
     });
     /*用户-添加*/
-    function gang_add(title,url,w,h){
+    function interview_add(title,url,w,h){
         layer_show(title,url,w,h);
     }
     /*用户-查看*/
@@ -146,7 +143,7 @@
         });
     }
     /*用户-编辑*/
-    function member_edit(title,url,id,w,h){
+    function interview_edit(title,url,id,w,h){
         layer_show(title,url,w,h);
     }
     /*密码-修改*/
@@ -170,23 +167,22 @@
             });
         });
     }
-    $(function () {
-        $("#interviews .btn-danger").on('click',function () {
-            if(confirm('是否确认删除?')){
-                var tr = $(this).closest('tr');
-                var id = tr.attr('data-id');
-                $.ajax({
-                    type: "DELETE",
-                    url: "interviews/"+id,
-                    data: "_token={{ csrf_token() }}",
-                    success: function(msg){
-                        tr.fadeOut();
-                    }
-                });
-            }
-
+    function interview_del(obj,id){
+        layer.confirm('确认要删除吗？',function(index){
+            $.ajax({
+                type: 'DELETE',
+                url: "interviews/"+id,
+                data: "_token={{ csrf_token() }}",
+                success: function(data){
+                    $(obj).parents("tr").remove();
+                    layer.msg('已删除!',{icon:1,time:1000});
+                },
+                error:function(data) {
+                    console.log(data.msg);
+                },
+            });
         });
-    });
+    }
 </script>
 </body>
 </html>

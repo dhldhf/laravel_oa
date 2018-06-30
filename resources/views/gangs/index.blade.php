@@ -19,10 +19,10 @@
     <script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js" ></script>
     <script>DD_belatedPNG.fix('*');</script>
     <![endif]-->
-    <title>用户管理</title>
+    <title>入岗登记</title>
 </head>
 <body>
-<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 用户中心 <span class="c-gray en">&gt;</span> 用户管理 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span>入岗登记中心 <span class="c-gray en">&gt;</span> 入岗登记管理 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
 <div class="page-container">
     <div class="text-c"> 日期范围：
         <input type="text" onfocus="WdatePicker({ maxDate:'#F{$dp.$D(\'datemax\')||\'%y-%M-%d\'}' })" id="datemin" class="input-text Wdate" style="width:120px;">
@@ -66,10 +66,7 @@
                     <td>{{ $gang->other_fee }}</td>
                     <td>{{ $gang->medium }}</td>
                     <td>{{ $gang->num }}  </td>
-                    <td>
-                        <a href="javascript:;" onclick="gang_show('修改登记信息','{{ route('gangs.edit',['gang'=>$gang]) }}','1000','800')" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe6df;</i> </a>
-                        <button class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i></button>
-                    </td>
+                    <td class="td-manage"><a title="编辑" href="javascript:;" onclick="gang_edit('修改登记信息','{{ route('gangs.edit',['gang'=>$gang]) }}','1000','800')" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6df;</i></a> <a title="删除" href="javascript:;" onclick="gang_del(this,'{{ $gang->id }}')" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a></td>
                 </tr>
             @endforeach
             </tbody>
@@ -103,9 +100,7 @@
         layer_show(title,url,w,h);
     }
     /*用户-查看*/
-    function gang_show(title,url,w,h){
-        layer_show(title,url,w,h);
-    }
+
     /*用户-停用*/
     function member_stop(obj,id){
         layer.confirm('确认要停用吗？',function(index){
@@ -146,7 +141,7 @@
         });
     }
     /*用户-编辑*/
-    function member_edit(title,url,id,w,h){
+    function gang_edit(title,url,id,w,h){
         layer_show(title,url,w,h);
     }
     /*密码-修改*/
@@ -154,12 +149,12 @@
         layer_show(title,url,w,h);
     }
     /*用户-删除*/
-    function member_del(obj,id){
+    function gang_del(obj,id){
         layer.confirm('确认要删除吗？',function(index){
             $.ajax({
-                type: 'POST',
-                url: '',
-                dataType: 'json',
+                type: 'DELETE',
+                url: "gangs/"+id,
+                data: "_token={{ csrf_token() }}",
                 success: function(data){
                     $(obj).parents("tr").remove();
                     layer.msg('已删除!',{icon:1,time:1000});
@@ -170,23 +165,6 @@
             });
         });
     }
-    $(function () {
-        $("#gangs .btn-danger").on('click',function () {
-            if(confirm('是否确认删除?')){
-                var tr = $(this).closest('tr');
-                var id = tr.attr('data-id');
-                $.ajax({
-                    type: "DELETE",
-                    url: "gangs/"+id,
-                    data: "_token={{ csrf_token() }}",
-                    success: function(msg){
-                        tr.fadeOut();
-                    }
-                });
-            }
-
-        });
-    });
 </script>
 </body>
 </html>

@@ -18,3 +18,23 @@ Route::get('/', function () {
 Route::resource('interviews', 'InterviewController');
 
 Route::resource('gangs', 'GangController');
+
+Route::resource('services', 'ServiceController');
+
+Route::get('login', 'SessionsController@create')->name('login');
+
+Route::post('login', 'SessionsController@store')->name('login');
+
+Route::delete('logout', 'SessionsController@destroy')->name('logout');
+
+Route::resource('users', 'UserController');
+
+Route::resource('cars', 'CarController');
+
+Route::post('cars/{car}/save', 'CarController@save')->name('save');
+
+Route::get('cars/{car}/end', 'CarController@end')->name('end');
+
+Route::resource('drivers', 'DriverController');
+
+Route::resource('strokes', 'StrokeController');
