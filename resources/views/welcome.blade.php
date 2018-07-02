@@ -1,6 +1,6 @@
-@extends('layout._header')
-@section('title','首页')
-@section('content')
+{{--@extends('layout._header')--}}
+{{--@section('title','首页')--}}
+{{--@section('content')--}}
         <!DOCTYPE HTML>
 <html>
 <head>
@@ -210,4 +210,4 @@
 <!--/此乃百度统计代码，请自行删除-->
 </body>
 </html>
-@stop
+{{--@stop--}}

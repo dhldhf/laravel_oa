@@ -186,12 +186,12 @@
     <div id="iframe_box" class="Hui-article">
         <div class="show_iframe">
             <div style="display:none" class="loading"></div>
-            {{--<div class="container">--}}
-                @include('layout._errors')
-                @include('layout.message')
-                @yield('content')
-            {{--</div>--}}
-            {{--<iframe scrolling="yes" frameborder="0" src="welcome.html"></iframe>--}}
+            <div class="container">
+                {{--@include('layout._errors')--}}
+                {{--@include('layout.message')--}}
+                {{--@yield('content')--}}
+            </div>
+            <iframe scrolling="yes" frameborder="0" src="/top"></iframe>
         </div>
     </div>
 </section>

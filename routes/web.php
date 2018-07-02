@@ -12,6 +12,9 @@
 */
 
 Route::get('/', function () {
+    return view('layout._header');
+});
+Route::get('/top', function () {
     return view('welcome');
 });
 
