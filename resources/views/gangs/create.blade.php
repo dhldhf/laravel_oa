@@ -30,7 +30,7 @@
 </head>
 <body>
 <div class="page-container">
-    <form class="form form-horizontal" method="post" action="{{route('gangs.store')}}">
+    <form class="form form-horizontal" id="form-gang-create">
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"></label>
             <div class="formControls col-xs-8 col-sm-9">
@@ -101,7 +101,12 @@
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">入住房号：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="{{old('num')}}" placeholder="中介返佣情况" id="中介返佣情况" name="num">
+                <select name="num" id="" class="input-text">
+                    <option value="null">请选择房号</option>
+                    @foreach($rooms as $room)
+                        <option value="{{ $room->num }}">楼盘名：{{ $room->property }}房号：{{ $room->num }}</option>
+                        @endforeach
+                </select>
                 </div>
                 </div>
                 <div class="row cl">
@@ -139,54 +144,61 @@
         });
 
         //表单验证
-        $("#form-article-add").validate({
+        $("#form-gang-create").validate({
             rules:{
-                articletitle:{
+                name:{
                     required:true,
                 },
-                articletitle2:{
+                alias:{
                     required:true,
                 },
-                articlecolumn:{
+                phone:{
                     required:true,
                 },
-                articletype:{
+                post:{
                     required:true,
                 },
-                articlesort:{
+                entry_time:{
                     required:true,
                 },
-                keywords:{
+                visa_fees:{
                     required:true,
                 },
-                abstract:{
+                customs_costs:{
                     required:true,
                 },
-                author:{
+                agency_costs:{
                     required:true,
                 },
-                sources:{
+                other_fee:{
                     required:true,
                 },
-                allowcomments:{
+                medium:{
                     required:true,
                 },
-                commentdatemin:{
-                    required:true,
-                },
-                commentdatemax:{
-                    required:true,
-                },
-
             },
             onkeyup:false,
             focusCleanup:true,
             success:"valid",
             submitHandler:function(form){
-                //$(form).ajaxSubmit();
-                var index = parent.layer.getFrameIndex(window.name);
-                //parent.$('.btn-refresh').click();
-                parent.layer.close(index);
+                $(form).ajaxSubmit({
+                    type: 'post',
+                    url: "/gangs",
+                    success:function(result){
+                        // console.log(result);
+                        if(result.code == 1){
+                            alert(result.msg);
+                            window.parent.location.reload();
+                        }
+                        if(result.code == 2){
+                            alert(result.msg);
+                            window.parent.location.reload();
+                        }
+                    },
+                    error: function(XmlHttpRequest, textStatus, errorThrown){
+                        layer.msg('error!',{icon:1,time:1000});
+                    }
+                });
             }
         });
 

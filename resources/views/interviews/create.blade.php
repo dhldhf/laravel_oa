@@ -30,7 +30,7 @@
 </head>
 <body>
 <div class="page-container">
-    <form class="form form-horizontal" method="post" action="{{route('interviews.store')}}">
+    <form class="form form-horizontal" id="form-interview-create">
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"></label>
             <div class="formControls col-xs-8 col-sm-9">
@@ -141,54 +141,64 @@
         });
 
         //表单验证
-        $("#form-article-add").validate({
+        $("#form-interview-create").validate({
             rules:{
-                articletitle:{
+                date:{
                     required:true,
                 },
-                articletitle2:{
+                name:{
                     required:true,
                 },
-                articlecolumn:{
+                gender:{
                     required:true,
                 },
-                articletype:{
+                census:{
                     required:true,
                 },
-                articlesort:{
+                experience:{
                     required:true,
                 },
-                keywords:{
+                option:{
                     required:true,
                 },
-                abstract:{
+                medium:{
                     required:true,
                 },
-                author:{
+                send_date:{
                     required:true,
                 },
-                sources:{
+                booking_date:{
                     required:true,
                 },
-                allowcomments:{
+                eta:{
                     required:true,
                 },
-                commentdatemin:{
+                note:{
                     required:true,
                 },
-                commentdatemax:{
-                    required:true,
-                },
-
             },
             onkeyup:false,
             focusCleanup:true,
             success:"valid",
             submitHandler:function(form){
-                //$(form).ajaxSubmit();
-                var index = parent.layer.getFrameIndex(window.name);
-                //parent.$('.btn-refresh').click();
-                parent.layer.close(index);
+                $(form).ajaxSubmit({
+                    type: 'post',
+                    url: "/interviews",
+                    success:function(result){
+                        // console.log(result);
+                        if(result.code == 1){
+                            alert(result.msg);
+                            window.parent.location.reload();
+                        }
+                        if(result.code == 2){
+                            alert(result.msg);
+                            window.parent.location.reload();
+                        }
+                    },
+                    error: function(XmlHttpRequest, textStatus, errorThrown){
+                        layer.msg('error!',{icon:1,time:1000});
+                    }
+                });
             }
         });
 

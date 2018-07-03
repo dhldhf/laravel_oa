@@ -84,9 +84,7 @@ class InterviewController extends Controller
                 'position'=>$request->position,
             ]
         );
-
-        session()->flash('success','添加成功');
-        return redirect()->route('interviews.index');
+        return response()->json(['code'=>'1','msg'=>'添加成功']);
     }
 
     /**
@@ -161,9 +159,7 @@ class InterviewController extends Controller
                 'position'=>$request->position,
             ]
         );
-
-        session()->flash('success','修改成功');
-        return redirect()->route('interviews.index');
+        return response()->json(['code'=>'1','msg'=>'修改成功']);
     }
 
     /**

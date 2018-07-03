@@ -31,7 +31,7 @@
         <input type="text" class="input-text" style="width:250px" placeholder="输入行姓名、电话" id="" name="">
         <button type="submit" class="btn btn-success radius" id="" name=""><i class="Hui-iconfont">&#xe665;</i> 搜登记信息</button>
     </div>
-    <div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l"><a href="javascript:;" onclick="gang_add('新增登记信息','{{ route('gangs.create') }}','','510')" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe600;</i> 新增登记信息</a></span> <span class="r">共有数据：<strong>88</strong> 条</span> </div>
+    <div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l"><a href="javascript:;" onclick="gang_add('新增登记信息','{{ route('gangs.create') }}','1000','800')" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe600;</i> 新增登记信息</a></span> <span class="r">共有数据：<strong>88</strong> 条</span> </div>
     <div class="mt-20">
         <table class="table table-border table-bordered table-hover table-bg table-sort" id="gangs">
             <thead>
@@ -65,7 +65,7 @@
                     <td>{{ $gang->agency_costs }}</td>
                     <td>{{ $gang->other_fee }}</td>
                     <td>{{ $gang->medium }}</td>
-                    <td>{{ $gang->num }}  </td>
+                    <td>{{ $gang->num==null?'没有选择房号':$gang->num }}  </td>
                     <td class="td-manage"><a title="编辑" href="javascript:;" onclick="gang_edit('修改登记信息','{{ route('gangs.edit',['gang'=>$gang]) }}','1000','800')" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6df;</i></a> <a title="删除" href="javascript:;" onclick="gang_del(this,'{{ $gang->id }}')" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a></td>
                 </tr>
             @endforeach

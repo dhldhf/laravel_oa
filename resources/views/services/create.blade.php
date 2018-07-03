@@ -30,7 +30,7 @@
 </head>
 <body>
 <div class="page-container">
-    <form class="form form-horizontal" method="post" action="{{route('services.store')}}">
+    <form class="form form-horizontal" id="form-service-create">
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"></label>
             <div class="formControls col-xs-8 col-sm-9">
@@ -41,25 +41,27 @@
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">楼盘：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="{{ old('property') }}" placeholder="楼盘" id="articletitle2" name="property">
+                <select name="property" id="" class="input-text">
+                    @foreach($rooms as $room)
+                        <option value="{{ $room->property }}">{{ $room->property }}</option>
+                    @endforeach
+                </select>
             </div>
         </div>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">房号：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="{{ old('num') }}" placeholder="房号" id="articletitle2" name="num">
+                <select name="num" id="" class="input-text">
+                    @foreach($rooms as $room)
+                    <option value="{{ $room->num }}">楼盘:{{ $room->property }}----房号:{{ $room->num }}</option>
+                        @endforeach
+                </select>
             </div>
         </div>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>维修项目：</label>
             <div class="col-xs-8 col-sm-9">
                 <input type="text" class="input-text" value="{{ old('project') }}" placeholder="维修对象" id="articletitle2" name="project">
-            </div>
-        </div>
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">问题描述：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="{{ old('description') }}" placeholder="具体描述" id="articletitle2" name="description">
             </div>
         </div>
         <div class="row cl">
@@ -78,6 +80,12 @@
             <label class="form-label col-xs-4 col-sm-2">跟进人：</label>
             <div class="formControls col-xs-8 col-sm-9">
                 <input type="text" class="input-text" value="{{old('follow_up')}}" placeholder="跟进人" id="跟进人" name="follow_up">
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">问题描述：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <textarea name="description" placeholder="具体描述" style="width: 713px;height: 100px;">{{ old('description') }}</textarea>
             </div>
         </div>
                 <div class="row cl">
@@ -113,54 +121,52 @@
         });
 
         //表单验证
-        $("#form-article-add").validate({
+        $("#form-service-create").validate({
             rules:{
-                articletitle:{
+                property:{
                     required:true,
                 },
-                articletitle2:{
+                num:{
                     required:true,
                 },
-                articlecolumn:{
+                project:{
                     required:true,
                 },
-                articletype:{
+                description:{
                     required:true,
                 },
-                articlesort:{
+                submission_time:{
                     required:true,
                 },
-                keywords:{
+                progress:{
                     required:true,
                 },
-                abstract:{
+                follow_up:{
                     required:true,
                 },
-                author:{
-                    required:true,
-                },
-                sources:{
-                    required:true,
-                },
-                allowcomments:{
-                    required:true,
-                },
-                commentdatemin:{
-                    required:true,
-                },
-                commentdatemax:{
-                    required:true,
-                },
-
             },
             onkeyup:false,
             focusCleanup:true,
             success:"valid",
             submitHandler:function(form){
-                //$(form).ajaxSubmit();
-                var index = parent.layer.getFrameIndex(window.name);
-                //parent.$('.btn-refresh').click();
-                parent.layer.close(index);
+                $(form).ajaxSubmit({
+                    type: 'post',
+                    url: "/services",
+                    success:function(result){
+                        // console.log(result);
+                        if(result.code == 1){
+                            alert(result.msg);
+                            window.parent.location.reload();
+                        }
+                        if(result.code == 2){
+                            alert(result.msg);
+                            window.parent.location.reload();
+                        }
+                    },
+                    error: function(XmlHttpRequest, textStatus, errorThrown){
+                        layer.msg('error!',{icon:1,time:1000});
+                    }
+                });
             }
         });
 

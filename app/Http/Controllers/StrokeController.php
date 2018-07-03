@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Stroke;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class StrokeController extends Controller
 {
@@ -16,6 +17,7 @@ class StrokeController extends Controller
     {
         $strokes = Stroke::paginate(10);
         return view('strokes.index',compact('strokes'));
+//                DB::table('strokes')->truncate();
     }
 
     /**
@@ -25,7 +27,7 @@ class StrokeController extends Controller
      */
     public function create()
     {
-        //
+
     }
 
     /**

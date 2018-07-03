@@ -21,45 +21,41 @@
     <script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js" ></script>
     <script>DD_belatedPNG.fix('*');</script>
     <![endif]-->
-    <title>车辆列表</title>
+    <title>管理员列表</title>
 </head>
 <body>
-<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 车辆管理 <span class="c-gray en">&gt;</span> 车辆列表 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 管理员管理 <span class="c-gray en">&gt;</span> 管理员列表 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
 <div class="page-container">
     <div class="text-c"> 日期范围：
         <input type="text" onfocus="WdatePicker({ maxDate:'#F{$dp.$D(\'datemax\')||\'%y-%M-%d\'}' })" id="datemin" class="input-text Wdate" style="width:120px;">
         -
         <input type="text" onfocus="WdatePicker({ minDate:'#F{$dp.$D(\'datemin\')}',maxDate:'%y-%M-%d' })" id="datemax" class="input-text Wdate" style="width:120px;">
-        <input type="text" class="input-text" style="width:250px" placeholder="输入车辆名称" id="" name="">
-        <button type="submit" class="btn btn-success" id="" name=""><i class="Hui-iconfont">&#xe665;</i> 搜车辆</button>
+        <input type="text" class="input-text" style="width:250px" placeholder="输入管理员名称" id="" name="">
+        <button type="submit" class="btn btn-success" id="" name=""><i class="Hui-iconfont">&#xe665;</i> 搜管理员</button>
     </div>
-    <div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l"><a href="javascript:;" onclick="car_add('添加车辆','{{ route('cars.create') }}','800','500')" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe600;</i> 添加车辆</a></span> <span class="r">共有数据：<strong>54</strong> 条</span> </div>
+    <div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l"><a href="javascript:;" onclick="user_add('添加管理员','{{ route('users.create') }}','800','500')" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe600;</i> 添加管理员</a></span> <span class="r">共有数据：<strong>54</strong> 条</span> </div>
     <table class="table table-border table-bordered table-bg">
         <thead>
         <tr>
+            <th scope="col" colspan="9">员工列表</th>
+        </tr>
+        <tr>
             <th>ID</th>
-            <th>汽车名称</th>
-            <th>车牌号</th>
-            <th>汽车分类</th>
-            <th>汽车状态</th>
+            <th>管理员姓名</th>
+            <th>管理员邮箱</th>
+            <th>管理员分类</th>
             <th>操作</th>
         </tr>
         </thead>
         <tbody>
-        @foreach($cars as $car)
-            <tr data-id="{{ $car->id }}">
-                <td>{{$car->id}}</td>
-                <td>{{ $car->name }}</td>
-                <td>{{$car->brand}}</td>
-                <td>{{$car->class}}</td>
-                <td class="sc">{{$car->status==0?'空闲':'繁忙'}}</td>
-                <td class="td-manage"><a title="编辑" href="javascript:;" onclick="car_edit('车辆编辑','{{ route('cars.edit',['car'=>$car]) }}','800','500')" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6df;</i></a> @if($car->status==0)
-                        <a style="text-decoration:none"  href="javascript:;" onclick="car_show('发车','{{ route('cars.show',['car'=>$car]) }}','800','500')" title="发车"><i class="Hui-iconfont">&#xe6de;</i></a>
-                    @endif
-                    @if($car->status==1)
-                    <a style="text-decoration:none"  href="javascript:;" title="收车"><i class="Hui-iconfont" onclick="car_end('收车','{{ $car->id }}')">&#xe6de;</i></a>
-                    @endif<a title="删除" href="javascript:;" onclick="car_del(this,'{{ $car->id }}')" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a></td>
-            </tr>
+        @foreach($users as $user)
+            <tr data-id="{{ $user->id }}">
+                <td>{{$user->id}}</td>
+                <td>{{ $user->name }}</td>
+                <td>{{$user->email}}</td>
+                <td>{{$user->status==0?'普通管理员':'超级管理员'}}</td>
+            <td class="td-manage"><a title="编辑" href="javascript:;" onclick="user_edit('管理员编辑','{{ route('users.edit',['user'=>$user]) }}','800','500')" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6df;</i></a> <a title="删除" href="javascript:;" onclick="user_del(this,'{{ $user->id }}')" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a></td>
+        </tr>
         @endforeach
         </tbody>
     </table>
@@ -84,15 +80,15 @@
         h		弹出层高度（缺省调默认值）
     */
     /*管理员-增加*/
-    function car_add(title,url,w,h){
+    function user_add(title,url,w,h){
         layer_show(title,url,w,h);
     }
     /*管理员-删除*/
-    function car_del(obj,id){
+    function user_del(obj,id){
         layer.confirm('确认要删除吗？',function(index){
             $.ajax({
                 type: 'DELETE',
-                url: "cars/"+id,
+                url: "users/"+id,
                 data: "_token={{ csrf_token() }}",
                 success: function(data){
                     $(obj).parents("tr").remove();
@@ -106,29 +102,8 @@
     }
 
     /*管理员-编辑*/
-    function car_edit(title,url,w,h){
+    function user_edit(title,url,w,h){
         layer_show(title,url,w,h);
-    }
-    function car_show(title,url,w,h){
-        layer_show(title,url,w,h);
-    }
-    function car_end(obj,id){
-        layer.confirm('确认要收车吗？',function(index){
-            $.ajax({
-                type: 'GET',
-                url: "cars/"+id+"/end",
-                data: "_token={{ csrf_token() }}",
-                dataType: 'json',
-                success: function(data){
-                    // $(obj).parents("tr").remove();
-                    $('.sc').html("空闲");
-                    layer.msg('已收车!',{icon:1,time:1000});
-                },
-                error:function(data) {
-                    console.log(data.msg);
-                },
-            });
-        });
     }
     /*管理员-停用*/
     function admin_stop(obj,id){

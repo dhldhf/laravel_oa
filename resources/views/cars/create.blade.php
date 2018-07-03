@@ -30,7 +30,7 @@
 </head>
 <body>
 <div class="page-container">
-    <form class="form form-horizontal" method="post" action="{{route('cars.store')}}" enctype="multipart/form-data">
+    <form class="form form-horizontal" enctype="multipart/form-data" id="form-car-add" onsubmit="return false;">
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"></label>
             <div class="formControls col-xs-8 col-sm-9">
@@ -42,12 +42,6 @@
             <label class="form-label col-xs-4 col-sm-2">汽车名称：</label>
             <div class="formControls col-xs-8 col-sm-9">
                 <input type="text" class="input-text" value="{{ old('name') }}" placeholder="汽车名称" id="articletitle2" name="name">
-            </div>
-        </div>
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">汽车图片：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="file" class="input-text" value="{{ old('logo') }}" placeholder="logo" id="articletitle2" name="logo">
             </div>
         </div>
         <div class="row cl">
@@ -64,7 +58,7 @@
         </div>
                 <div class="row cl">
                     <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2">
-                    <button onClick="article_save_submit();" class="btn btn-primary radius" type="submit"><i class="Hui-iconfont">&#xe632;</i> 保存并提交审核</button>
+                    <button class="btn btn-primary radius" type="submit"><i class="Hui-iconfont">&#xe632;</i> 保存并提交审核</button>
                 </div>
                 </div>
         {{csrf_field()}}
@@ -94,57 +88,7 @@
             increaseArea: '20%'
         });
 
-        //表单验证
-        $("#form-article-add").validate({
-            rules:{
-                articletitle:{
-                    required:true,
-                },
-                articletitle2:{
-                    required:true,
-                },
-                articlecolumn:{
-                    required:true,
-                },
-                articletype:{
-                    required:true,
-                },
-                articlesort:{
-                    required:true,
-                },
-                keywords:{
-                    required:true,
-                },
-                abstract:{
-                    required:true,
-                },
-                author:{
-                    required:true,
-                },
-                sources:{
-                    required:true,
-                },
-                allowcomments:{
-                    required:true,
-                },
-                commentdatemin:{
-                    required:true,
-                },
-                commentdatemax:{
-                    required:true,
-                },
 
-            },
-            onkeyup:false,
-            focusCleanup:true,
-            success:"valid",
-            submitHandler:function(form){
-                //$(form).ajaxSubmit();
-                var index = parent.layer.getFrameIndex(window.name);
-                //parent.$('.btn-refresh').click();
-                parent.layer.close(index);
-            }
-        });
 
         $list = $("#fileList"),
             $btn = $("#btn-star"),
@@ -247,6 +191,43 @@
 
         var ue = UE.getEditor('editor');
 
+    });
+    //表单验证
+    $("#form-car-add").validate({
+        rules:{
+            name:{
+                required:true,
+            },
+            brand:{
+                required:true,
+            },
+            class:{
+                required:true,
+            },
+        },
+        onkeyup:false,
+        focusCleanup:true,
+        success:"valid",
+        submitHandler:function(form){
+            $(form).ajaxSubmit({
+                type: 'post',
+                url:"/cars",
+                success:function(result){
+                    // console.log(result);
+                    if(result.code == 1){
+                        alert(result.msg);
+                        window.parent.location.reload();
+                    }
+                },
+                error:function(XmlHttpRequest, textStatus, errorThrown){
+                    layer.msg('error!',{icon:1,time:1000});
+                }
+
+            });
+            // var index = parent.layer.getFrameIndex(window.name);
+            //parent.$('.btn-refresh').click();
+            // parent.layer.close(index);
+        }
     });
 </script>
 <!--/请在上方写此页面业务相关的脚本-->

@@ -25,19 +25,13 @@
 </head>
 <body>
 <article class="page-container">
-    <form class="form form-horizontal" method="post" action="{{ route('drivers.store') }}" enctype="multipart/form-data">
+    <form class="form form-horizontal" id="form-driver-add">
         @include('layout._errors')
         @include('layout.message')
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>司机姓名：</label>
             <div class="formControls col-xs-8 col-sm-9">
                 <input type="text" class="input-text" value="{{ old('name') }}" placeholder="司机姓名" id="name" name="name">
-            </div>
-        </div>
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>司机头像：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="file" class="input-text" autocomplete="off" value="{{old('logo')}}" placeholder="司机头像" id="logo" name="logo">
             </div>
         </div>
         <div class="row cl">
@@ -73,23 +67,13 @@
             increaseArea: '20%'
         });
 
-        $("#form-admin-add").validate({
+        $("#form-driver-add").validate({
             rules:{
                 name:{
                     required:true,
-                    minlength:1,
-                    maxlength:16
                 },
-                password:{
+                phone:{
                     required:true,
-                },
-                password_confirmation:{
-                    required:true,
-                    equalTo: "#password"
-                },
-                email:{
-                    required:true,
-                    email:true,
                 },
             },
             onkeyup:false,
@@ -98,17 +82,21 @@
             submitHandler:function(form){
                 $(form).ajaxSubmit({
                     type: 'post',
-                    url: "users/store" ,
-                    success: function(data){
-                        layer.msg('添加成功!',{icon:1,time:1000});
+                    url: "/drivers" ,
+                    success:function(result){
+                        // console.log(result);
+                        if(result.code == 1){
+                            alert(result.msg);
+                            window.parent.location.reload();
+                        }
                     },
                     error: function(XmlHttpRequest, textStatus, errorThrown){
                         layer.msg('error!',{icon:1,time:1000});
                     }
                 });
-                var index = parent.layer.getFrameIndex(window.name);
-                parent.$('.btn-refresh').click();
-                parent.layer.close(index);
+                // var index = parent.layer.getFrameIndex(window.name);
+                // parent.$('.btn-refresh').click();
+                // parent.layer.close(index);
             }
         });
     });

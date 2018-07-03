@@ -21,7 +21,7 @@ class DriverController extends Controller
      */
     public function index()
     {
-        $drivers = Driver::paginate(3);
+        $drivers = Driver::paginate(10);
         return view('drivers.index',compact('drivers'));
     }
 
@@ -46,26 +46,19 @@ class DriverController extends Controller
         $this->validate($request,
             [
                 'name'=>'required',
-                'logo'=>'required|image',
                 'phone'=>'required',
             ],
             [
                 'name.required'=>'汽车名称不能为空',
-                'logo.required'=>'头像不能为空',
-                'logo.image'=>'图片格式不正确',
                 'phone.required'=>'电话不能为空',
             ]);
-        $fileName = $request->file('logo')->store('public/drivers');
-        $file = url(Storage::url($fileName));
         Driver::create(
             [
                 'name'=>$request->name,
-                'logo'=>$file,
                 'phone'=>$request->phone,
             ]
         );
-        session()->flash('success','添加成功');
-        return redirect()->route('drivers.index');
+            return response()->json(['code'=>'1','msg'=>'添加成功']);
     }
 
     /**
@@ -102,26 +95,19 @@ class DriverController extends Controller
         $this->validate($request,
             [
                 'name'=>'required',
-                'logo'=>'required|image',
                 'phone'=>'required',
             ],
             [
                 'name.required'=>'司机姓名不能为空',
-                'logo.required'=>'司机头像不能为空',
-                'logo.image'=>'图片格式不正确',
                 'phone.required'=>'手机号不能为空',
             ]);
-        $fileName = $request->file('logo')->store('public/drivers');
-        $file = url(Storage::url($fileName));
         $driver->update(
             [
                 'name'=>$request->name,
-                'logo'=>$file,
                 'phone'=>$request->phone,
             ]
         );
-        session()->flash('success','修改成功');
-        return redirect()->route('drivers.index');
+        return response()->json(['code'=>'1','msg'=>'修改成功']);
     }
 
     /**

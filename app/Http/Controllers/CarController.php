@@ -46,6 +46,7 @@ class CarController extends Controller
      */
     public function store(Request $request)
     {
+//        dd($request->name);
         $this->validate($request,
             [
                 'name'=>'required',
@@ -57,18 +58,16 @@ class CarController extends Controller
                 'brand.required'=>'车牌号不能为空',
                 'class.required'=>'分类不能为空',
             ]);
-        $fileName = $request->file('logo')->store('public/car');
-        $file = url(Storage::url($fileName));
         Car::create(
             [
                 'name'=>$request->name,
-                'logo'=>$file,
                 'brand'=>$request->brand,
                 'class'=>$request->class,
             ]
         );
-        session()->flash('success','添加成功');
-        return redirect()->route('cars.index');
+//        session()->flash('success','添加成功');
+//        return redirect()->route('cars.index');
+        return response()->json(['code' => '1', 'msg' => '添加成功！']);
     }
 
     /**
@@ -84,6 +83,7 @@ class CarController extends Controller
     }
 
     public function save(Request $request,Car $car){
+//        var_dump($car);die;
         $this->validate($request,
             [
                 'departure'=>'required',
@@ -111,8 +111,10 @@ class CarController extends Controller
                 'status'=>1,
             ]
         );
-        session()->flash('success','已发车');
-        return redirect()->route('strokes.index');
+        DB::table('drivers')
+        ->where('name', $request->driver_name)
+            ->update(['status' => 1]);
+        return response()->json(['code' => '1', 'msg' => '已发车！']);
     }
     /**
      * Show the form for editing the specified resource.
@@ -134,32 +136,26 @@ class CarController extends Controller
      */
     public function update(Request $request, Car $car)
     {
+//        var_dump($request->name);die;
         $this->validate($request,
             [
                 'name'=>'required',
-                'logo'=>'required|image',
                 'brand'=>'required',
                 'class'=>'required',
             ],
             [
                 'name.required'=>'汽车名称不能为空',
-                'logo.required'=>'汽车图片不能为空',
-                'logo.image'=>'图片格式不正确',
                 'brand.required'=>'车牌号不能为空',
                 'class.required'=>'分类不能为空',
             ]);
-        $fileName = $request->file('logo')->store('public/car');
-        $file = url(Storage::url($fileName));
         $car->update(
             [
                 'name'=>$request->name,
-                'logo'=>$file,
                 'brand'=>$request->brand,
                 'class'=>$request->class,
             ]
         );
-        session()->flash('success','修改成功');
-        return redirect()->route('cars.index');
+        return response()->json(['code' => '1', 'msg' => '修改成功！']);
     }
 
     /**
@@ -200,6 +196,10 @@ class CarController extends Controller
                 'status'=>0,
             ]
         );
-        return json_encode(true,1);
+        DB::table('drivers')
+            ->where('name', $car_id->driver_name)
+            ->update(['status' => 0]);
+        return response()->json(['code' => '1', 'msg' => '增加成功！']);
+//        return json_encode(true,1);
     }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Gang;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class GangController extends Controller
 {
@@ -22,6 +23,7 @@ class GangController extends Controller
     {
         $gangs = Gang::paginate(10);
         return view('gangs.index',compact('gangs'));
+//        DB::table('gangs')->truncate();
     }
 
     /**
@@ -31,8 +33,14 @@ class GangController extends Controller
      */
     public function create()
     {
-//        var_dump(234);die;
-        return view('gangs.create');
+        $data= DB::table('rooms')->get();
+        $rooms = [];
+        foreach ($data as $b){
+            if($b->in < $b->accommodate){
+                $rooms[] = $b;
+            }
+        }
+        return view('gangs.create',compact('rooms'));
     }
 
     /**
@@ -43,6 +51,7 @@ class GangController extends Controller
      */
     public function store(Request $request)
     {
+//        var_dump($request->num);die;
         $this->validate($request,
             [
                 'name'=>'required',
@@ -71,7 +80,19 @@ class GangController extends Controller
                 'num.required'=>'入住房号不能为空',
             ]);
 //        var_dump($request->date);die;
-        Gang::create(
+        $one = DB::table('rooms')->where('num','=',$request->num)->first();
+//        var_dump($one->in,$one->accommodate);die;
+        if($one->in >= $one->accommodate){
+            return response()->json(['code'=>'2','msg'=>'添加失败，房号已满']);
+        }
+        DB::table('rooms')
+            ->where('num',$request->num)
+            ->update(
+                [
+                'in' => $one->in + 1,
+                ]
+            );
+            Gang::create(
             [
                 'name'=>$request->name,
                 'alias'=>$request->alias,
@@ -86,9 +107,7 @@ class GangController extends Controller
                 'num'=>$request->num,
             ]
         );
-
-        session()->flash('success','添加成功');
-        return redirect()->route('gangs.index');
+        return response()->json(['code'=>'1','msg'=>'添加成功']);
     }
 
     /**
@@ -167,9 +186,7 @@ class GangController extends Controller
                 'num'=>$request->num,
             ]
         );
-
-        session()->flash('success','修改成功');
-        return redirect()->route('gangs.index');
+        return response()->json(['code'=>'1','msg'=>'修改成功']);
     }
 
     /**

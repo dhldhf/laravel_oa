@@ -32,7 +32,8 @@ class ServiceController extends Controller
      */
     public function create()
     {
-        return view('services.create');
+        $rooms = DB::table('rooms')->get();
+        return view('services.create',compact('rooms'));
     }
 
     /**
@@ -73,8 +74,7 @@ class ServiceController extends Controller
             'progress'=>$request->progress,
             'follow_up'=>$request->follow_up,
         ]);
-        session()->flash('success','添加成功');
-        return redirect()->route('services.index');
+        return response()->json(['code'=>'1','msg'=>'添加成功']);
     }
     /**
      * Display the specified resource.
@@ -95,7 +95,8 @@ class ServiceController extends Controller
      */
     public function edit(Service $service)
     {
-        return view('services.edit',compact('service'));
+        $rooms = DB::table('rooms')->get();
+        return view('services.edit',compact('service','rooms'));
     }
 
     /**
@@ -137,8 +138,7 @@ class ServiceController extends Controller
                 'progress'=>$request->progress,
                 'follow_up'=>$request->follow_up,
             ]);
-        session()->flash('success','修改成功');
-        return redirect()->route('services.index');
+        return response()->json(['code'=>'1','msg'=>'修改成功']);
     }
 
     /**

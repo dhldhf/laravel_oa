@@ -19,27 +19,48 @@
     <script type="text/javascript" src="/lib/DD_belatedPNG_0.0.8a-min.js" ></script>
     <script>DD_belatedPNG.fix('*');</script>
     <![endif]-->
-    <title>修改司机 - 司机管理 - H-ui.admin v3.1</title>
+    <title>添加管理员 - 管理员管理 - H-ui.admin v3.1</title>
     <meta name="keywords" content="H-ui.admin v3.1,H-ui网站后台模版,后台模版下载,后台管理系统模版,HTML后台模版下载">
     <meta name="description" content="H-ui.admin v3.1，是一款由国人开发的轻量级扁平化网站后台模板，完全免费开源的网站后台管理系统模版，适合中小型CMS后台系统。">
 </head>
 <body>
 <article class="page-container">
-    <form class="form form-horizontal" id="form-driver-edit">
+    <form class="form form-horizontal" id="form-user-edit">
         @include('layout._errors')
         @include('layout.message')
-        <div data-id="{{ $driver->id }}" id="driver_id"></div>
+        <div data-id="{{ $user->id }}" id="user_id"></div>
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>司机姓名：</label>
+            <label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>管理员：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="{{ $driver->name }}" placeholder="司机姓名" id="name" name="name">
+                <input type="text" class="input-text" value="{{ $user->name }}" placeholder="" id="name" name="name">
             </div>
         </div>
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>司机电话：</label>
+            <label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>初始密码：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text"   placeholder="司机电话" id="phone" name="phone" value="{{$driver->phone}}">
+                <input type="password" class="input-text" autocomplete="off" value="{{old('password')}}" placeholder="密码" id="password" name="password">
             </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>确认密码：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="password" class="input-text" autocomplete="off"  placeholder="确认新密码" id="确认新密码" name="password_confirmation" value="{{old('password_confirmation')}}">
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>邮箱：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" placeholder="@" name="email" id="email" value="{{ $user->email }}">
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-3">分类：</label>
+            <div class="formControls col-xs-8 col-sm-9"> <span class="select-box" style="width:150px;">
+			<select class="select" name="status" size="1">
+				<option value="1" {{ $user->status==1?'selected':'' }}>超级管理员</option>
+				<option value="0" {{ $user->status==0?'selected':'' }}>普通管理员</option>
+			</select>
+			</span> </div>
         </div>
         <div class="row cl">
             <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
@@ -69,23 +90,33 @@
             increaseArea: '20%'
         });
 
-        $("#form-driver-edit").validate({
+        $("#form-user-edit").validate({
             rules:{
                 name:{
                     required:true,
+                    minlength:1,
+                    maxlength:16
                 },
-                phone:{
+                password:{
                     required:true,
+                },
+                password_confirmation:{
+                    required:true,
+                    equalTo: "#password"
+                },
+                email:{
+                    required:true,
+                    email:true,
                 },
             },
             onkeyup:false,
             focusCleanup:true,
             success:"valid",
             submitHandler:function(form){
-                var id = $('#driver_id').attr('data-id');
+                var id = $('#user_id').attr('data-id');
                 $(form).ajaxSubmit({
                     type: 'put',
-                    url: "/drivers/"+id ,
+                    url: "/users/"+id ,
                     success: function(result){
                         console.log(result);
                         if (result.code == 1) {
@@ -97,9 +128,6 @@
                         layer.msg('error!',{icon:1,time:1000});
                     }
                 });
-                // var index = parent.layer.getFrameIndex(window.name);
-                // parent.$('.btn-refresh').click();
-                // parent.layer.close(index);
             }
         });
     });

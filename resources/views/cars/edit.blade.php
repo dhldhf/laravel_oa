@@ -30,7 +30,8 @@
 </head>
 <body>
 <div class="page-container">
-    <form class="form form-horizontal" method="post" action="{{route('cars.update',['car'=>$car])}}" enctype="multipart/form-data">
+    <form class="form form-horizontal" id="form-car-edit">
+        <div data-id="{{$car->id}}" id="car_id"></div>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"></label>
             <div class="formControls col-xs-8 col-sm-9">
@@ -42,12 +43,6 @@
             <label class="form-label col-xs-4 col-sm-2">汽车名称：</label>
             <div class="formControls col-xs-8 col-sm-9">
                 <input type="text" class="input-text" value="{{ $car->name }}" placeholder="汽车名称" id="articletitle2" name="name">
-            </div>
-        </div>
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">汽车图片：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="file" class="input-text" value="{{ $car->logo }}" placeholder="logo" id="articletitle2" name="logo">
             </div>
         </div>
         <div class="row cl">
@@ -96,54 +91,37 @@
         });
 
         //表单验证
-        $("#form-article-add").validate({
+        $("#form-car-edit").validate({
             rules:{
-                articletitle:{
+                name:{
                     required:true,
                 },
-                articletitle2:{
+                brand:{
                     required:true,
                 },
-                articlecolumn:{
+                class:{
                     required:true,
                 },
-                articletype:{
-                    required:true,
-                },
-                articlesort:{
-                    required:true,
-                },
-                keywords:{
-                    required:true,
-                },
-                abstract:{
-                    required:true,
-                },
-                author:{
-                    required:true,
-                },
-                sources:{
-                    required:true,
-                },
-                allowcomments:{
-                    required:true,
-                },
-                commentdatemin:{
-                    required:true,
-                },
-                commentdatemax:{
-                    required:true,
-                },
-
             },
             onkeyup:false,
             focusCleanup:true,
             success:"valid",
             submitHandler:function(form){
-                //$(form).ajaxSubmit();
-                var index = parent.layer.getFrameIndex(window.name);
-                //parent.$('.btn-refresh').click();
-                parent.layer.close(index);
+                var id = $('#car_id').attr('data-id');
+                $(form).ajaxSubmit({
+                    type: 'put',
+                    url: "/cars/"+id ,
+                    success: function(result){
+                        console.log(result);
+                        if (result.code == 1) {
+                            alert(result.msg);
+                            window.parent.location.reload();
+                        }
+                    },
+                    error: function(XmlHttpRequest, textStatus, errorThrown){
+                        layer.msg('error!',{icon:1,time:1000});
+                    }
+                });
             }
         });
 

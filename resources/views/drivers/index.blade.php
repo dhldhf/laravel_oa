@@ -39,7 +39,6 @@
         <tr>
             <th>ID</th>
             <th>司机姓名</th>
-            <th>司机头像</th>
             <th>司机电话</th>
             <th>司机状态</th>
             <th>操作</th>
@@ -50,7 +49,6 @@
             <tr data-id="{{ $driver->id }}">
                 <td>{{$driver->id}}</td>
                 <td>{{ $driver->name }}</td>
-                <td><img src="{{ $driver->logo }}" alt="" width="100px" height="100px"></td>
                 <td>{{$driver->phone}}</td>
                 <td>{{$driver->status==0?'空闲':'繁忙'}}</td>
             <td class="td-manage"><a title="编辑" href="javascript:;" onclick="driver_edit('管理员编辑','{{ route('drivers.edit',['driver'=>$driver]) }}','800','500')" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6df;</i></a> <a title="删除" href="javascript:;" onclick="driver_del(this,'{{ $driver->id }}')" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a></td>

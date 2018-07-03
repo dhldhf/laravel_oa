@@ -41,3 +41,5 @@ Route::get('cars/{car}/end', 'CarController@end')->name('end');
 Route::resource('drivers', 'DriverController');
 
 Route::resource('strokes', 'StrokeController');
+
+Route::resource('rooms','RoomController');
