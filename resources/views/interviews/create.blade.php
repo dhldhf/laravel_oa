@@ -153,6 +153,7 @@
                     required:true,
                 },
                 census:{
+
                     required:true,
                 },
                 experience:{

@@ -175,9 +175,6 @@
                                 eta:{
                                     required:true,
                                 },
-                                note:{
-                                    required:true,
-                                },
 
                             },
                             onkeyup:false,
